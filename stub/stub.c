@@ -4,6 +4,7 @@
 #define _GNU_SOURCE
 #include <fenv.h>
 #include <setjmp.h>
+#include <stdlib.h>
 #include "std.h"
 
 #ifdef STATISTICS
@@ -61,7 +62,7 @@ iFP	10
 iLP	11
 iSP	12
 iCP	13
-ivory	14		; ivory processor object	
+ivory	14		; ivory processor object
 arg1	16
 arg2	17
 arg3	18
@@ -535,13 +536,14 @@ int iInterpret (PROCESSORSTATEP ivoryp) {
   u64 volatile r20, r21, r22, r23, r24, r25, r26, r27, r29;
   u64 sp;
   u64 r31 = 0;
-  // 
+  //
   // jj
   //
   int im1 ;
 
   arexp = &&arex;
   asm("movq %%rsp,%0" : "=m"(iipsp) : : );
+
   //
 #include "dispatch"
 #ifdef STATISTICS
@@ -589,7 +591,7 @@ dumpcache(PROCESSORSTATEP p)
 void
 show_loc(void)
 {
-  static int c = 0; 
+  static int c = 0;
   static u64 bsp;
   u64 *p = (u64 *)iSP;
   u64 tos = *p;
@@ -714,4 +716,3 @@ void SpinWheels () {
  }
 
 #include "blanks.c"
-

@@ -780,7 +780,7 @@
   (or (eq str 'ocp) (eq str 'ecp) (eq str 'iCP) (equal str "iCP")))
 
 (defun cacheline-ptr-str (ptr)
-  (if (or (eq ptr 'iCP) (equal ptr "iCP")) 
+  (if (or (eq ptr 'iCP) (equal ptr "iCP"))
       "iCP"
     (string-downcase ptr)))
 
@@ -1155,18 +1155,11 @@
 		 (fixarg arg1)
 		 (fixarg arg2))
 	 (format destination
-		 "  /* x86_64 replacement for addl/v */~%")
-	 (format destination
-		 "    asm(\"movl %k2,%k0 \\n\\t\"
-	\"addl %k3,%k0 \\n\\t\"
-	\"seto %b1\"
-        : \"=r\"(~a),\"=rm\"(~a)
-        : \"rm\"(~a),\"rm\"(~a)
-        : \"cc\");~%"
-	 (fixarg arg3)
-	 "oflo"
-	 (fixarg arg1)
-	 (fixarg arg2))
+                 "  ~A = __builtin_add_overflow((s32)~A, (s32)~A, (s32*)&~A);~%"
+                 "oflo"
+	         (fixarg arg1)
+	         (fixarg arg2)
+         	 (fixarg arg3))
 	 (setq *do-check-oflo* t)
 	 (format destination "//  if (~A >> 32)~%//    exception();~%"
 		 (fixarg arg3)))
@@ -1179,18 +1172,11 @@
 		 (fixarg arg1)
 		 (fixarg arg2))
 	 (format destination
-		 "  /* x86_64 replacement for subl/v */~%")
-	 (format destination
-		 "    asm(\"movl %k2,%k0 \\n\\t\"
-	\"subl %k3,%k0 \\n\\t\"
-	\"seto %b1\"
-        : \"=r\"(~a),\"=rm\"(~a)
-        : \"rm\"(~a),\"rm\"(~a)
-        : \"cc\");~%"
-	 (fixarg arg3)
-	 "oflo"
-	 (fixarg arg1)
-	 (fixarg arg2))
+                 "  ~A = __builtin_sub_overflow((s32)~A, (s32)~A, (s32*)&~A);~%"
+	         "oflo"
+	         (fixarg arg1)
+	         (fixarg arg2)
+         	 (fixarg arg3))
 	 (format destination "//  if (~A >> 32)~%//    exception();~%"
 		 (fixarg arg3))
 	 (setq *do-check-oflo* t))
@@ -1514,25 +1500,25 @@
 	(FBEQ
 	 (check-comment arg3)
 	 (format destination "  if (FLTU64(~A, ~A) == 0.0)~%    goto ~A;~%"
-		 (regnum (fixarg arg1)) (fixarg arg1) 
+		 (regnum (fixarg arg1)) (fixarg arg1)
 		 (gotolabel arg2)))
 
 	(FBLT
 	 (check-comment arg3)
 	 (format destination "  if (FLTU64(~A, ~A) < 0.0)~%    goto ~A;~%"
-		 (regnum (fixarg arg1)) (fixarg arg1) 
+		 (regnum (fixarg arg1)) (fixarg arg1)
 		 (gotolabel arg2)))
 
 	(FBGT
 	 (check-comment arg3)
 	 (format destination "  if (FLTU64(~A, ~A) > 0.0)~%    goto ~A;~%"
-		 (regnum (fixarg arg1)) (fixarg arg1) 
+		 (regnum (fixarg arg1)) (fixarg arg1)
 		 (gotolabel arg2)))
 
 	(FBNE
 	 (check-comment arg3)
 	 (format destination "  if (FLTU64(~A, ~A) != 0.0)~%    goto ~A;~%"
-		 (regnum (fixarg arg1)) (fixarg arg1) 
+		 (regnum (fixarg arg1)) (fixarg arg1)
 		 (gotolabel arg2)))
 
 	(FCMOVGT
@@ -1679,7 +1665,7 @@
 	     (format destination "  LDS(~A, ~A, *(u32 *)~A );~%"
 		     (regnum (fixarg arg1)) (fixarg arg1) (fixarg arg3))
 	   (format destination "  LDS(~A, ~A, ~A->~A);~%"
-		   (regnum (fixarg arg1)) 
+		   (regnum (fixarg arg1))
 		   (fixarg arg1) (structptr arg3) (fixarg arg2))))
 
 	(LDT
@@ -1690,7 +1676,7 @@
 	     (format destination "  LDT(~A, ~A, *(u32 *)~A );~%"
 		     (regnum (fixarg arg1)) (fixarg arg1) (fixarg arg3))
 	   (format destination "  LDT(~A, ~A, ~A->~A);~%"
-		   (regnum (fixarg arg1)) 
+		   (regnum (fixarg arg1))
 		   (fixarg arg1) (structptr arg3) (fixarg arg2))))
 
 	(STS
@@ -1826,18 +1812,11 @@
 		 (fixarg arg1)
 		 (fixarg arg2))
 	 (format destination
-		 "  /* x86_64 replacement for mull/v */~%")
-	 (format destination
-		 "    asm(\"movl %k2,%k0 \\n\\t\"
-	\"imull %k3,%k0 \\n\\t\"
-	\"seto %b1\"
-        : \"=r\"(~a),\"=rm\"(~a)
-        : \"rm\"(~a),\"rm\"(~a)
-        : \"cc\");~%"
-	 (fixarg arg3)
-	 "oflo"
-	 (fixarg arg1)
-	 (fixarg arg2))
+                 "  ~A = __builtin_mul_overflow((s32)~A, (s32)~A, (s32*)&~A);~%"
+	         "oflo"
+	         (fixarg arg1)
+	         (fixarg arg2)
+         	 (fixarg arg3))
 	 (setq *do-check-oflo* t)
 	 (format destination "//  if (~A >> 32)~%//    exception();~%"
 		 (fixarg arg3)))
@@ -1845,22 +1824,13 @@
 	(X64RATQUO
 	 (check-comment arg4)
 	 (format destination
-		 "  /* x86_64 replacement for fixnum rational quotient */~%")
-	 (format destination
-		 "    asm(\"movl %k2,%%eax \\n\\t\"~36,4T// get arg1 into res
-        \"cdq \\n\\t\"~36,4T// sign extend into edx:eax
-        \"idivl %k3 \\n\\t\"~36,4T// divide by arg2
-        \"movl %%eax,%k0 \\n\\t\"~36,4T// result into f0
-        \"movl %%edx,%k1\"~36,4T// remainder into im1
-        : \"=mr\"(~a),\"=rm\"(~a)~36,4T// %0;res, %1:im1
-        : \"rm\"(~a),\"rm\"(~a)~36,4T// %2:t2, %3:t4
-        : \"rax\", \"rdx\", \"cc\");~36,4T// clobbers eax, edx and cc;~%"
-	 (fixarg arg1)
-	 "im1"
-	 (fixarg arg2)
-	 (fixarg arg3))
+                 "  div_t divres = div((s32)~A, (s32)~A);~%  ~A = divres.quot;~%  ~A = divres.rem;~%"
+	         (fixarg arg2)
+	         (fixarg arg3)
+         	 (fixarg arg1)
+	         "im1")
 	 (setq *do-check-ratquo* t))
-	
+
 	(LIBMFLOOR
 	 (format destination
 		 "  /* use libc function floor for rounding-mode :down */~%")
@@ -1988,7 +1958,7 @@
 
 	(SRA
 	 (check-comment arg4)
-	 (setq shiftarg 
+	 (setq shiftarg
 	       (if (numberp arg2) (logand arg2 63)
 		 (format nil "(~A & 63)" (fixarg arg2))))
 	 (format destination "  ~A = (s64)~A >> ~A;~%"
@@ -1996,7 +1966,7 @@
 
 	(SRL
 	 (check-comment arg4)
-	 (setq shiftarg 
+	 (setq shiftarg
 	       (if (numberp arg2) (logand arg2 63)
 		 (format nil "(~A & 63)" (fixarg arg2))))
 	 (format destination "  ~A = ~A >> ~A;~%"
@@ -2004,7 +1974,7 @@
 
 	(SLL
 	 (check-comment arg4)
-	 (setq shiftarg 
+	 (setq shiftarg
 	       (if (numberp arg2) (logand arg2 63)
 		 (format nil "(~A & 63)" (fixarg arg2))))
 	 (format destination "  ~A = ~A << ~A;~%"
@@ -2190,7 +2160,7 @@
 		 (equal (ext:substring arg1 0 5) "#ifnd")
 		 (equal (ext:substring arg1 0 4) "#end"))
 	     (format destination "~A~%" arg1)))
-	     
+
 	(otherwise
 	 (format t "***UNKNOWN FORM: ~S~%" form))
 
@@ -2222,7 +2192,7 @@
 	(c-header tfs sourcefilename)
 	(do ((form (read sfs nil :eof) (read sfs nil :eof)))
 	    ((eq form :eof) nil)
-	  (when (consp form) 
+	  (when (consp form)
 	    (process-asm-form form tfs)))
 	(c-trailer tfs sourcefilename)))))
 

@@ -94,7 +94,10 @@ g8926:
 
 g8919:
   if (_trace) printf("g8919:\n");
-  /* Here if argument (TypeOneQForward TypeElementForward TypeHeaderForward TypeExternalValueCellPointer) */
+  /* 
+Here if argument 
+(TypeOneQForward TypeElementForward TypeHeaderForward
+ TypeExternalValueCellPointer) */
   /* Memory Read Internal */
 
 g8907:

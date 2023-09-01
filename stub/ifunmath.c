@@ -202,13 +202,7 @@ g7508:
   t6 = *(u64 *)&(((CACHELINEP)iCP)->nextpcdata);
   /* compute 64-bit result */
 //  t5 = (s64)((s32)t2 * (s64)(s32)t4); /* mull/v */
-  /* x86_64 replacement for mull/v */
-    asm("movl %k2,%k0 \n\t"
-	"imull %k3,%k0 \n\t"
-	"seto %b1"
-        : "=r"(t5),"=rm"(oflo)
-        : "rm"(t2),"rm"(t4)
-        : "cc");
+  oflo = __builtin_mul_overflow((s32)t2, (s32)t4, (s32*)&t5);
 //  if (t5 >> 32)
 //    exception();
   t7 = *(u64 *)&(((CACHELINEP)iCP)->nextcp);
@@ -907,15 +901,9 @@ g7594:
   if (t9 == 0)
     goto g7590;
   /* Here if argument TypeFixnum */
-  /* x86_64 replacement for fixnum rational quotient */
-    asm("movl %k2,%%eax \n\t"       // get arg1 into res
-        "cdq \n\t"                  // sign extend into edx:eax
-        "idivl %k3 \n\t"            // divide by arg2
-        "movl %%eax,%k0 \n\t"       // result into f0
-        "movl %%edx,%k1"            // remainder into im1
-        : "=mr"(f0),"=rm"(im1)      // %0;res, %1:im1
-        : "rm"(t2),"rm"(t4)         // %2:t2, %3:t4
-        : "rax", "rdx", "cc");      // clobbers eax, edx and cc;
+  div_t divres = div((s32)t2, (s32)t4);
+  f0 = divres.quot;
+  im1 = divres.rem;
   /* Force the trap to occur here */
   /* trapb force the trap to occur here */
   if (im1)
