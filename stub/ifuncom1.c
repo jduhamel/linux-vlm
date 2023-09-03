@@ -353,7 +353,7 @@ g6200:
     goto haltmachine;
 #endif
   /* Jump to the handler */
-    goto *((u64 *)t3); /* jmp */
+    goto *((void *)t3); /* jmp */
   /* Here to advance the PC and begin a new instruction.  Most */
   /* instructions come here when they have finished.  Instructions */
   /* that explicitly update the PC (and CP) go to interpretInstruction. */
@@ -2942,7 +2942,7 @@ g6478:
   t7 = arg6;
   t9 = arg3;
   sp = sp + 8;
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 g6471:
   if (_trace) printf("g6471:\n");
@@ -3308,7 +3308,7 @@ g6492:
 g6491:
   if (_trace) printf("g6491:\n");
   sp = sp + 8;
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 g6493:
   if (_trace) printf("g6493:\n");
@@ -3482,7 +3482,7 @@ g6515:
 g6514:
   if (_trace) printf("g6514:\n");
   sp = sp + 8;
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 g6516:
   if (_trace) printf("g6516:\n");
@@ -3653,7 +3653,7 @@ DoReadInternalRegisterFP:
     goto ReadRegisterError;
   t3 = *(u64 *)t3;
   /* Jump to the handler */
-    goto *((u64 *)t3); /* jmp */
+    goto *((void *)t3); /* jmp */
 
 g6553:
   if (_trace) printf("g6553:\n");
@@ -3664,7 +3664,7 @@ g6553:
     goto ReadRegisterError;
   t3 = *(u64 *)t3;
   /* Jump to the handler */
-    goto *((u64 *)t3); /* jmp */
+    goto *((void *)t3); /* jmp */
 
 /* end DoReadInternalRegister */
   /* End of Halfword operand from stack instruction - DoReadInternalRegister */
@@ -3711,7 +3711,7 @@ DoWriteInternalRegisterFP:
     goto WriteRegisterError;
   t3 = *(u64 *)t3;
   /* Jump to the handler */
-    goto *((u64 *)t3); /* jmp */
+    goto *((void *)t3); /* jmp */
 
 g6554:
   if (_trace) printf("g6554:\n");
@@ -3722,7 +3722,7 @@ g6554:
     goto WriteRegisterError;
   t3 = *(u64 *)t3;
   /* Jump to the handler */
-    goto *((u64 *)t3); /* jmp */
+    goto *((void *)t3); /* jmp */
 
 /* end DoWriteInternalRegister */
   /* End of Halfword operand from stack instruction - DoWriteInternalRegister */

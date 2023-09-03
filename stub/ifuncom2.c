@@ -1915,7 +1915,7 @@ g6822:
     goto g6825;
 
 g6830:
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 memoryreadwritedecode:
   if (_trace) printf("memoryreadwritedecode:\n");

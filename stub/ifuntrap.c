@@ -1907,7 +1907,7 @@ g8862:
   /* write the stack cache */
   *(u32 *)(iSP + 12) = t9;
   iSP = iSP + 8;
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 g8863:
   if (_trace) printf("g8863:\n");

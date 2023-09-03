@@ -42,7 +42,7 @@ g6044:
     goto g6047;
 
 g6053:
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 memoryreaddatadecode:
   if (_trace) printf("memoryreaddatadecode:\n");
@@ -167,7 +167,7 @@ g6055:
     goto g6058;
 
 g6064:
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 memoryreadgeneraldecode:
   if (_trace) printf("memoryreadgeneraldecode:\n");
@@ -297,7 +297,7 @@ g6066:
     goto g6069;
 
 g6073:
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 memoryreadheaderdecode:
   if (_trace) printf("memoryreadheaderdecode:\n");
@@ -373,7 +373,7 @@ g6075:
     goto g6078;
 
 g6082:
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 memoryreadcdrdecode:
   if (_trace) printf("memoryreadcdrdecode:\n");

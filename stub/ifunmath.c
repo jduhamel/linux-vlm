@@ -523,7 +523,7 @@ g7548:
 g7539:
   if (_trace) printf("g7539:\n");
   sp = sp + 8;
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 g7549:
   if (_trace) printf("g7549:\n");

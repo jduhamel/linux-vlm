@@ -1934,12 +1934,12 @@ g7809:
 g7764:
   if (_trace) printf("g7764:\n");
   t2 = ReturnValue_Exception;
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 g7772:
   if (_trace) printf("g7772:\n");
   t2 = ReturnValue_Normal;
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 g7849:
   if (_trace) printf("g7849:\n");

@@ -343,7 +343,7 @@ g6980:
 g6978:
   if (_trace) printf("g6978:\n");
   sp = sp + 8;
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 g6981:
   if (_trace) printf("g6981:\n");
@@ -1865,7 +1865,7 @@ g7130:
 g7131:
   if (_trace) printf("g7131:\n");
 #endif
-  goto *((u64* )r0); /* ret */
+  goto *((void* )r0); /* ret */
 
 /* end StackCacheUnderflow */
 /* start StackCacheOverflowHandler */
