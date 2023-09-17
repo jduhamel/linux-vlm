@@ -504,7 +504,7 @@ dumpstack(void)
 //
 //jmp_buf arex_env ;
 void *arexp ;
-uint64_t iipsp ;
+uint64_t iipbp;
 #ifdef STATISTICS
 void DumpInstructionUsageData( void );
 #ifdef EXECTIMES
@@ -542,7 +542,7 @@ int iInterpret (PROCESSORSTATEP ivoryp) {
   int im1 ;
 
   arexp = &&arex;
-  asm("movq %%rsp,%0" : "=m"(iipsp) : : );
+  iipbp = (uint64_t)__builtin_frame_address(0);
 
   //
 #include "dispatch"

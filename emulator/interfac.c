@@ -56,7 +56,7 @@ char *haltreason (int reason)
 
 /*
   Good luck finding documentation on args 2&3 for ALPHA.
-  Supposedly this is a supported, required interface for 
+  Supposedly this is a supported, required interface for
   OSF Realtime (POSIX.4) and SVR4 compliance.
 */
 
@@ -120,13 +120,13 @@ void fpe_handler (int sigval, siginfo_t *si, void *uc)
 // jj
 //
 extern void *arexp ;
-extern uint64_t iipsp ;
+extern uint64_t iipbp;
 void fpe_handler (int sigval, siginfo_t *si, void *uc)
 {
-  uint64_t rsp = ((ucontext_t*)uc)->uc_mcontext.gregs[REG_RSP] ;
+  uint64_t rbp = ((ucontext_t*)uc)->uc_mcontext.gregs[REG_RBP] ;
 
   //  printf("trap: rsp = %llx, interpretr rsp = %llx\n", rsp, iipsp );
-  if (rsp != iipsp) {
+  if (rbp != iipbp) {
 	  printf("oops: arithmetic exception outside of interpreter function\n");
 	  ((ucontext_t*)uc)->uc_mcontext.gregs[REG_RIP] = (uint64_t)ARITHMETICEXCEPTION;
   }
@@ -155,7 +155,7 @@ int InstructionSequencer (void)
   if (Runningp()) {
     int reason;
     struct sigaction action;
-  
+
 #ifdef OS_OSF
     action.sa_handler = (sa_handler_t)segv_handler;
     action.sa_flags = 0;			/* tried SA_RESTART too, no luck */
@@ -217,7 +217,7 @@ int FIBTestCode [51][3] = {
  { 00, 065, 030002201424 }, /* 030002201424 */
  { 00, 061, 032003311377 },
 /* { 00, 064, 033040161772 }, */
- { 00, 062, 037000161772 }, 
+ { 00, 062, 037000161772 },
  { 00, Type_CompiledFunction, 0xF8000000L+07 },
  { 03, 060, 03376003 },
  { 00, 073, 013402703377 },
@@ -227,7 +227,7 @@ int FIBTestCode [51][3] = {
  { 03, 064, 02270402 },
  { 02, 056, 0xF8000000L+06 },
  { 00, 065, 030402603402 },
- { 00, 064, 033000601000 }, 
+ { 00, 064, 033000601000 },
  { 01, 000, 0 } /* End of compiled code */
 };
 
@@ -262,7 +262,7 @@ void PushOneFakeFrame (void)
 void PopOneFakeFrame (void)
 { LispObjRecordp fp, pc;
   fp = ((LispObjRecordp)(processor->fp));
-  
+
   processor->sp = *(((uint64_t *)&fp)) - 8;
   processor->fp -= 8*ReadControlCallerFrameSize(processor->control);
   pc = ((LispObjRecordp)(&(processor->continuation)));
@@ -320,9 +320,9 @@ void InitializeTestFunction ()
 
 void MakeArrayFromBits (uint64_t bits, char **tablePointer)
 { int *table, i;
-  
+
   *tablePointer = (char*) malloc (64 * sizeof (int));
-  if (NULL == (table = (int*)*tablePointer)) 
+  if (NULL == (table = (int*)*tablePointer))
     vpunt (NULL, "Unable to allocate internal data structures");
 
   for (i = 0; i < 64; i++) {
@@ -343,16 +343,16 @@ static int first_time = 1;
 
 static int *debugcopymat;
 
-void CheckMat () 
+void CheckMat ()
 { int i, j;
   int *matline;
-  for (i = 0, matline=debugcopymat; 
-       i < 13; 
+  for (i = 0, matline=debugcopymat;
+       i < 13;
        i++, matline+=64)
     { int * e;
       for (e = &MemoryActionTable[i][0],j=0 ; e < &MemoryActionTable[i][64]; e++, j++) {
-        if (matline[j]!=*e) 
-          vwarn (NULL, "MAT difference found at [i=%d,j=%d] MAT=%d copymat=%d\n", 
+        if (matline[j]!=*e)
+          vwarn (NULL, "MAT difference found at [i=%d,j=%d] MAT=%d copymat=%d\n",
 		 i, j, *e, matline[j]);
       }
     }
@@ -370,7 +370,7 @@ static void ComputeSpeed (int64_t *speed) {
     SpinWheels();
     times(&tms);
     timeafter = ((int)((int64_t) (tms.tms_utime+tms.tms_stime)*1000000/tps));
-    t1=timeafter-timebefore;  
+    t1=timeafter-timebefore;
     if (t1 < tmin) tmin=t1;
   };
   *speed=((((int64_t) tmin)*1000000L)/0x4000000L);
@@ -416,7 +416,7 @@ static void ComputeSpeed (int64_t *speed) {
     SpinWheels();
     times(&tms);
     timeafter = ((int)((int64_t) (tms.tms_utime+tms.tms_stime)*1000000/tps));
-    t1=timeafter-timebefore;  
+    t1=timeafter-timebefore;
     if (t1 < tmin) tmin=t1;
   };
   *speed=((((int64_t) tmin)*1000000L)/0x4000000L);
@@ -484,7 +484,7 @@ void InitializeIvoryProcessor (Integer *basedata, Tag *basetag)
     /* processor state preceeds TagSpace, both accessed from Ivory register */
     caddr_t state_page = (caddr_t)MapVirtualAddressTag(0) - ALPHAPAGESIZE*2; /* pr */
     caddr_t block;
-    
+
     if (state_page != mmap(state_page, 2*ALPHAPAGESIZE, PROT_READ|PROT_WRITE, /* pr */
 		            MAP_ANONYMOUS|MAP_PRIVATE|MAP_FIXED,-1,0))
       vpunt (NULL, "Couldn't create processor state page");
@@ -562,8 +562,8 @@ void InitializeIvoryProcessor (Integer *basedata, Tag *basetag)
     processor->fepmodetrapvecaddress=0xF8040A47L;
     processor->tvi=0;
     for (i = 0, maskPointer = &processor->dataread_mask,
-	  tablePointer = &processor->dataread, matline=copymat; 
-         i < 13; 
+	  tablePointer = &processor->dataread, matline=copymat;
+         i < 13;
          i++, maskPointer += 2, tablePointer += 2, matline+=64)
       { int* e;
 	uint64_t mask = 0;
@@ -623,7 +623,7 @@ void InitializeIvoryProcessor (Integer *basedata, Tag *basetag)
   InitializeInstructionCache();
   processor->icachebase=(char*)instructioncache;
   processor->endicache=((char*)instructioncache)+icachesize*sizeof(CACHELINE);
-    
+
   /* Initialize the stack cache */
 
   InitializeStackCache();
@@ -642,7 +642,7 @@ void InitializeIvoryProcessor (Integer *basedata, Tag *basetag)
   processor->lp=(int64_t)processor->stackcachedata;
 
   processor->control=2;
- 
+
 #if defined(ARCH_ALPHA)
   /* MS clock multiplier -- initial values */
   processor->mscmultiplier=109051; /* 6.5 ns clock RPCC N=1 */
@@ -709,7 +709,7 @@ void InitializeIvoryProcessor (Integer *basedata, Tag *basetag)
 }
 
 int Runningp (void)
-{ 
+{
   return processor->runningp;
 }
 
@@ -806,11 +806,11 @@ LispObj WriteInternalRegister (int regno, LispObj val)
     case InternalRegister_StackCacheLowerBound:
       processor->stackcachebasevma=object.data;
       break;
-	
+
     case InternalRegister_BAR0:
       *((LispObjRecordp)&(processor->bar0))=object;
       break;
-	
+
     case InternalRegister_BAR1:
 //printf("**set bar1 %p\n", (void *)object);
       *((LispObjRecordp)&(processor->bar1))=object;
@@ -887,7 +887,7 @@ LispObj WriteInternalRegister (int regno, LispObj val)
 
     case InternalRegister_TOS:
       return (LispObj)(-1); /* -1 is the error result for an unimplemented register */
-	
+
     case InternalRegister_EventCount:
     case InternalRegister_BindingStackPointer:
     case InternalRegister_CatchBlockList:
@@ -920,7 +920,7 @@ LispObj WriteInternalRegister (int regno, LispObj val)
     case InternalRegister_StackFrameMaximumSize:
     case InternalRegister_StackCacheDumpQuantum:
     case InternalRegister_ConstantNIL:
-    case InternalRegister_ConstantT:    
+    case InternalRegister_ConstantT:
       return (LispObj)(-1); /* -1 is the error result for an unimplemented register */
   }
   return (*((LispObj *)(&object)));
@@ -951,11 +951,11 @@ LispObj ReadInternalRegister (int regno)
       object.tag=Type_Locative;
       object.data=processor->stackcachebasevma;
       break;
-	
+
     case InternalRegister_BAR0:
       object=*((LispObjRecordp)&(processor->bar0));
       break;
-	
+
     case InternalRegister_BAR1:
       object=*((LispObjRecordp)&(processor->bar1));
       break;
@@ -1032,7 +1032,7 @@ LispObj ReadInternalRegister (int regno)
 
     case InternalRegister_TOS:
       return (LispObj)(-1); /* -1 is the error result for an unimplemented register */
-	
+
     case InternalRegister_EventCount:
     case InternalRegister_BindingStackPointer:
     case InternalRegister_CatchBlockList:
@@ -1058,7 +1058,7 @@ LispObj ReadInternalRegister (int regno)
     case InternalRegister_StackFrameMaximumSize:
     case InternalRegister_StackCacheDumpQuantum:
     case InternalRegister_ConstantNIL:
-    case InternalRegister_ConstantT:    
+    case InternalRegister_ConstantT:
       return (LispObj)(-1); /* -1 is the error result for an unimplemented register */
   }
   return (*((LispObj *)(&object)));

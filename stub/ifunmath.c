@@ -901,9 +901,8 @@ g7594:
   if (t9 == 0)
     goto g7590;
   /* Here if argument TypeFixnum */
-  div_t divres = div((s32)t2, (s32)t4);
-  f0 = divres.quot;
-  im1 = divres.rem;
+  f0 = (s32)t2 / (s32)t4;
+  im1 = (s32)t2 % (s32)t4;
   /* Force the trap to occur here */
   /* trapb force the trap to occur here */
   if (im1)

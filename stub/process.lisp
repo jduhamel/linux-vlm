@@ -1824,11 +1824,15 @@
 	(X64RATQUO
 	 (check-comment arg4)
 	 (format destination
-                 "  div_t divres = div((s32)~A, (s32)~A);~%  ~A = divres.quot;~%  ~A = divres.rem;~%"
+                 "  ~A = (s32)~A / (s32)~A;~%"
+                 (fixarg arg1)
 	         (fixarg arg2)
-	         (fixarg arg3)
-         	 (fixarg arg1)
-	         "im1")
+	         (fixarg arg3))
+         (format destination
+                 "  ~A = (s32)~A % (s32)~A;~%"
+                 "im1"
+                 (fixarg arg2)
+	         (fixarg arg3))
 	 (setq *do-check-ratquo* t))
 
 	(LIBMFLOOR
